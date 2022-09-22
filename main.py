@@ -1,7 +1,8 @@
+from pydoc import plain
 import seaborn as sns
 import pandas as pd
 from pydantic import BaseModel
-from fastapi import FastAPI,Request
+from fastapi import FastAPI,Request,Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from sklearn.ensemble import RandomForestClassifier
@@ -26,20 +27,14 @@ def get_values():
         values.update({column:set(X[column].to_list())})
     return values
 
-class Person(BaseModel):
-    pclass:int
-    sibsp:int
-    parch:int
-    sex:str
 
 @app.post("/predict",status_code=200)
-def get_predict(person:Person):
-    sex_female = 1 if person.sex == 'female' else 0
-    sex_male = 1 if person.sex == 'male' else 0
-    row = pd.DataFrame({"pclass":[person.pclass],"sibsp" :[person.sibsp], "parch" :[person.parch], "sex_female" :[sex_female], "sex_male":[sex_male]})
-    print(row)
-    # model = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1)
-    # model.fit(X, y)
-    # predictions = model.predict(row)
-    # print(predictions)
-    return 
+def get_predict(request:Request,pclass:int=Form(),sibsp:int=Form(),parch:int=Form(),sex:str=Form()):
+    sex_female = 1 if sex == 'female' else 0
+    sex_male = 1 if sex == 'male' else 0
+    row = pd.DataFrame({"pclass":[pclass],"sibsp" :[sibsp], "parch" :[parch], "sex_female" :[sex_female], "sex_male":[sex_male]})
+    model = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1)
+    model.fit(X, y)
+    prediction = model.predict(row)
+    status = 'survived' if prediction[0] == 1 else 'death'
+    return template.TemplateResponse('prediction.html',{'request':request,'pclass':pclass,'sibsp':sibsp,'parch':parch,'sex':sex,'prediction':status})

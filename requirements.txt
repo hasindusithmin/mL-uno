@@ -3,3 +3,4 @@ seaborn
 pandas
 fastapi
 jinja2
+python-multipart
