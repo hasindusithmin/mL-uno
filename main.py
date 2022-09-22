@@ -1,17 +1,13 @@
 
-import seaborn as sns
-import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from fastapi import FastAPI,Request
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 
-df = sns.load_dataset('titanic')
 
-y = df["survived"]
-features = ["pclass", "sex", "sibsp", "parch"]
-X = pd.get_dummies(df[features])
+app = FastAPI()
 
-row = pd.DataFrame({"pclass":[3],"sibsp" :[1], "parch" :[0], "sex_female" :[1], "sex_male":[0]})
+template = Jinja2Templates(directory='templates')
 
-model = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=1)
-model.fit(X, y)
-predictions = model.predict(row)
-print(predictions)
+@app.get("/",response_class=HTMLResponse)
+def get_homepage(request:Request):
+    return template.TemplateResponse('index.html',{"request":request})
