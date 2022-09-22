@@ -1,6 +1,6 @@
 import seaborn as sns
 import pandas as pd
-from fastapi import FastAPI,Request,Form
+from fastapi import FastAPI,Request,Form,status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from sklearn.ensemble import RandomForestClassifier
@@ -43,3 +43,7 @@ def get_predict(request:Request,pclass:int=Form(),sibsp:int=Form(),parch:int=For
     prediction = model.predict(row)
     status = 'survived' if prediction[0] == 1 else 'death'
     return template.TemplateResponse('prediction.html',{'request':request,'pclass':pclass,'sibsp':sibsp,'parch':parch,'sex':sex,'prediction':status})
+
+@app.get('/alive')
+def keep_alive():
+    return status.HTTP_200_OK
