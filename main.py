@@ -1,7 +1,5 @@
-from pydoc import plain
 import seaborn as sns
 import pandas as pd
-from pydantic import BaseModel
 from fastapi import FastAPI,Request,Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
@@ -27,6 +25,13 @@ def get_values():
         values.update({column:set(X[column].to_list())})
     return values
 
+@app.get("/table")
+def get_df_head(request:Request):
+    df100 = df.head(25)
+    df100dict = {}
+    for column in df100.columns:
+        df100dict.update({column:df100[column].to_list()})
+    return template.TemplateResponse('table.html',{'request':request,'df':df100dict})
 
 @app.post("/predict",status_code=200)
 def get_predict(request:Request,pclass:int=Form(),sibsp:int=Form(),parch:int=Form(),sex:str=Form()):
