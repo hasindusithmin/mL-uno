@@ -1,12 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
+
 <body>
-    
+    <form action="" id="root" method="post" class="w3-panel"></form>
+    <script>
+        const createDiv = (key,value,name) => {
+            const div = document.createElement('div');
+            const h5 = document.createElement('h5');
+            h5.innerHTML = key;
+            h5.className = 'w3-serif w3-text-blue';
+            div.appendChild(h5);
+            for (let val of value) {
+                let input = document.createElement('input');
+                let span = document.createElement('span');
+                input.type = 'radio';
+                input.name = name;
+                input.value = val;
+                input.className = 'w3-radio w3-margin';
+                span.innerHTML = val;
+                div.appendChild(span);
+                div.appendChild(input);
+            }
+            document.getElementById('root').appendChild(div);
+        }
+        fetch('/values')
+            .then(res => res.json())
+            .then(data => {
+                for (let [key, value] of Object.entries(data)) {
+                    if (key != 'sex_female' && key != 'sex_male') {
+                        createDiv(key,value,key)
+                    }
+                    else {
+                        createDiv(key,value,'sex')
+                    }
+                }
+                const input = document.createElement('input')
+                input.className = 'w3-input w3-btn w3-blue'
+                input.type = 'submit'
+                document.getElementById('root').appendChild(input)
+            })
+    </script>
 </body>
+
 </html>
