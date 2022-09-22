@@ -14,7 +14,7 @@ y = df["survived"]
 features = ["pclass", "sex", "sibsp", "parch"]
 X = pd.get_dummies(df[features])
 
-@app.get("/",response_class=HTMLResponse)
+@app.get("/test",response_class=HTMLResponse)
 def get_homepage(request:Request):
     return template.TemplateResponse('index.html',{"request":request})
 
@@ -25,7 +25,7 @@ def get_values():
         values.update({column:set(X[column].to_list())})
     return values
 
-@app.get("/table")
+@app.get("/")
 def get_df_head(request:Request):
     df100 = df.head(25)
     df100dict = {}

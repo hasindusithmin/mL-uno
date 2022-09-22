@@ -10,22 +10,27 @@
 </head>
 
 <body>
-    <div class="w3-row">
-        <table class="w3-table-all">
-            <tr>
-                {% for d in df %}
+    <div class="w3-panel">
+        <div class="w3-row">
+            <a href="/test">Test</a>
+        </div>
+        <div class="w3-row">
+            <table class="w3-table-all">
+                <caption>Titanic dataset</caption>
+                <tr>
+                    {% for d in df %}
                     <th>{{d}}</th>
-                {% endfor %}
-            </tr>
-            {% for i in range(25)%}
-            <tr>
-                {% for d in df %}
+                    {% endfor %}
+                </tr>
+                {% for i in range(25)%}
+                <tr>
+                    {% for d in df %}
                     <td>{{df[d][i]}}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
-
+            </table>
+        </div>
     </div>
 </body>
 
